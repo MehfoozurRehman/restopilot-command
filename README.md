@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# RestoPilot Command: Local-First Restaurant POS & Operations Suite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A local-first, offline-tolerant restaurant point-of-sale (POS) workstation, kitchen display coordinator, order dispatch terminal, and live table billing management system built with Electron 42, React 19, Vite 8, and Convex.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+`restopilot-command` delivers a fast desktop POS terminal for busy restaurants:
+- **Local-First Speed & Offline Tolerance**: Electron desktop runtime with instantaneous local state changes powered by Zustand and local caching.
+- **Real-Time Synchronized Kitchen & Tables**: Live reactive database layer using Convex (`convex`) for table statuses, ticket items, modifier selections, and split-bill payments.
+- **Fast UI & Modern Tooling**: React 19 with React Compiler (`babel-plugin-react-compiler`), Vite 8, Tailwind CSS v4, Lucide icons, and Date-fns formatting.
+- **Cross-Platform Desktop Packaging**: Production desktop builds for Windows (`.exe` / portable), macOS, and Linux via `electron-builder`.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Desktop Framework**: [Electron](https://www.electronjs.org/) (v42), `vite-plugin-electron`, `vite-plugin-electron-renderer`
+- **Frontend Core**: React 19, TypeScript, [Vite](https://vitejs.dev/) (v8), React Router DOM (v7)
+- **Real-Time Backend**: [Convex](https://convex.dev/) (`convex`)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) (v5)
+- **Styling**: Tailwind CSS v4 (`@tailwindcss/vite`)
+- **Packaging**: `electron-builder`
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js (v20 or higher recommended)
+- Package manager (`npm` or `pnpm`)
+- Convex project account (`npx convex dev`)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Start the Convex Backend**:
+   ```bash
+   npx convex dev
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+3. **Run Desktop Application in Development Mode**:
+   ```bash
+   npm run electron:dev
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+4. **Run Web Version Only**:
+   ```bash
+   npm run dev
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Available Scripts
+
+- `npm run electron:dev` - Starts the Vite development server and launches the Electron desktop app with live reload.
+- `npm run dev` - Starts the Vite web development server at `http://127.0.0.1:5173`.
+- `npm run build` - Generates brand assets, type-checks with `tsc`, compiles the Vite build, and packages the desktop installer using `electron-builder`.
+- `npm run build:web` - Compiles the web production bundle.
+- `npm run lint` - Runs ESLint code quality checks.
+
+## Author
+
+Created by [Mehfooz-ur-Rehman](https://github.com/MehfoozurRehman).
