@@ -1,0 +1,20 @@
+.input {
+  width: 100%;
+  border: 1px solid rgb(214 211 209);
+  border-radius: 10px;
+  background: white;
+  padding: 0.7rem 0.85rem;
+  color: rgb(15 23 42);
+  outline: none;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input:focus {
+  border-color: rgb(15 118 110);
+  box-shadow: 0 0 0 3px rgb(15 118 110 / 0.12);
+}
+
+::selection {
+  background: rgb(15 118 110 / 0.22);
+}

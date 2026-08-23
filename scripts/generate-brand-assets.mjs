@@ -1,0 +1,49 @@
+import { mkdir, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import sharp from 'sharp'
+import pngToIco from 'png-to-ico'
+
+const root = process.cwd()
+const buildDir = join(root, 'build')
+const publicDir = join(root, 'public')
+
+const markSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" rx="216" fill="#0F172A"/>
+  <path d="M236 680V344C236 311 263 284 296 284H550C683 284 790 391 790 524C790 657 683 764 550 764H320C274 764 236 726 236 680Z" fill="#F8FAFC"/>
+  <path d="M326 634V414H546C607 414 656 463 656 524C656 585 607 634 546 634H326Z" fill="#0F766E"/>
+  <path d="M416 526C416 479 454 441 501 441H544C590 441 628 479 628 526C628 572 590 610 544 610H501C454 610 416 572 416 526Z" fill="#F97316"/>
+  <path d="M323 746H586" stroke="#F97316" stroke-width="44" stroke-linecap="round"/>
+  <path d="M744 324L744 480" stroke="#F8FAFC" stroke-width="36" stroke-linecap="round"/>
+  <path d="M704 324L704 448" stroke="#F8FAFC" stroke-width="30" stroke-linecap="round"/>
+  <path d="M784 324L784 448" stroke="#F8FAFC" stroke-width="30" stroke-linecap="round"/>
+  <path d="M744 480V728" stroke="#F8FAFC" stroke-width="36" stroke-linecap="round"/>
+</svg>`
+
+const logoSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1480" height="360" viewBox="0 0 1480 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1480" height="360" rx="56" fill="#0F172A"/>
+  <g transform="translate(48 48) scale(.258)">
+    ${markSvg.replace(/<\?xml[^>]+>/, '').replace(/<svg[^>]+>/, '').replace('</svg>', '')}
+  </g>
+  <text x="350" y="154" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="800">RestoPilot</text>
+  <text x="354" y="236" fill="#F97316" font-family="Inter, Arial, sans-serif" font-size="54" font-weight="700">Command</text>
+  <text x="708" y="236" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="500">Local-first restaurant operations</text>
+</svg>`
+
+await mkdir(buildDir, { recursive: true })
+await mkdir(publicDir, { recursive: true })
+await writeFile(join(publicDir, 'brand-mark.svg'), markSvg)
+await writeFile(join(publicDir, 'brand-logo.svg'), logoSvg)
+await writeFile(join(buildDir, 'brand-mark.svg'), markSvg)
+
+const sizes = [16, 32, 48, 64, 128, 256, 512]
+const pngs = []
+for (const size of sizes) {
+  const out = join(buildDir, `icon-${size}.png`)
+  await sharp(Buffer.from(markSvg)).resize(size, size).png().toFile(out)
+  pngs.push(out)
+}
+
+await sharp(Buffer.from(markSvg)).resize(512, 512).png().toFile(join(buildDir, 'icon.png'))
+await writeFile(join(buildDir, 'icon.ico'), await pngToIco(pngs))

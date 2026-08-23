@@ -1,0 +1,141 @@
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
+
+export default defineSchema({
+  brand: defineTable({
+    restaurantName: v.string(),
+    tagline: v.string(),
+    accent: v.string(),
+    receiptFooter: v.string(),
+    email: v.string(),
+    password: v.string(),
+    taxId: v.string(),
+    currency: v.string(),
+  }),
+  vendors: defineTable({
+    name: v.string(),
+    phone: v.string(),
+    balance: v.number(),
+    leadDays: v.number(),
+  }).index("by_name", ["name"]),
+  materials: defineTable({
+    name: v.string(),
+    unit: v.string(),
+    stock: v.number(),
+    reorderAt: v.number(),
+    costPerUnit: v.number(),
+    vendorId: v.optional(v.id("vendors")),
+  }).index("by_name", ["name"]),
+  products: defineTable({
+    name: v.string(),
+    category: v.string(),
+    price: v.number(),
+    cost: v.number(),
+    tax: v.number(),
+    station: v.union(v.literal("Kitchen"), v.literal("Grill"), v.literal("Bar"), v.literal("Dessert")),
+    active: v.boolean(),
+    prepMinutes: v.number(),
+  })
+    .index("by_active", ["active"])
+    .index("by_category", ["category"]),
+  recipes: defineTable({
+    productId: v.id("products"),
+    materialId: v.id("materials"),
+    qty: v.number(),
+  }).index("by_productId", ["productId"]),
+  deals: defineTable({
+    name: v.string(),
+    price: v.number(),
+    validDays: v.array(v.string()),
+    active: v.boolean(),
+  }).index("by_active", ["active"]),
+  dealItems: defineTable({
+    dealId: v.id("deals"),
+    productId: v.id("products"),
+    qty: v.number(),
+  }).index("by_dealId", ["dealId"]),
+  tables: defineTable({
+    name: v.string(),
+    area: v.string(),
+    seats: v.number(),
+    status: v.union(v.literal("free"), v.literal("seated"), v.literal("ordered"), v.literal("served"), v.literal("billing"), v.literal("reserved")),
+    waiter: v.string(),
+  }).index("by_status", ["status"]),
+  staff: defineTable({
+    name: v.string(),
+    role: v.union(v.literal("Owner"), v.literal("Manager"), v.literal("Cashier"), v.literal("Chef"), v.literal("Waiter"), v.literal("Inventory")),
+    pin: v.string(),
+    hourlyRate: v.number(),
+    active: v.boolean(),
+  }).index("by_active", ["active"]),
+  customers: defineTable({
+    name: v.string(),
+    phone: v.string(),
+    visits: v.number(),
+    loyaltyPoints: v.number(),
+    notes: v.string(),
+  }).index("by_phone", ["phone"]),
+  orders: defineTable({
+    ticketNo: v.number(),
+    tableId: v.optional(v.id("tables")),
+    customer: v.string(),
+    channel: v.union(v.literal("Dine-in"), v.literal("Takeaway"), v.literal("Delivery")),
+    status: v.union(v.literal("draft"), v.literal("sent"), v.literal("preparing"), v.literal("ready"), v.literal("served"), v.literal("paid"), v.literal("void")),
+    discount: v.number(),
+    serviceCharge: v.number(),
+    paidBy: v.optional(v.union(v.literal("Cash"), v.literal("Card"), v.literal("Wallet"), v.literal("Split"))),
+    createdAt: v.string(),
+  })
+    .index("by_status", ["status"])
+    .index("by_createdAt", ["createdAt"]),
+  orderItems: defineTable({
+    orderId: v.id("orders"),
+    productId: v.optional(v.id("products")),
+    dealId: v.optional(v.id("deals")),
+    name: v.string(),
+    qty: v.number(),
+    price: v.number(),
+    notes: v.string(),
+    station: v.string(),
+  }).index("by_orderId", ["orderId"]),
+  expenses: defineTable({
+    category: v.string(),
+    amount: v.number(),
+    note: v.string(),
+    date: v.string(),
+  }).index("by_date", ["date"]),
+  purchases: defineTable({
+    vendorId: v.id("vendors"),
+    materialId: v.id("materials"),
+    qty: v.number(),
+    total: v.number(),
+    status: v.union(v.literal("draft"), v.literal("ordered"), v.literal("received")),
+    date: v.string(),
+  }).index("by_date", ["date"]),
+  reservations: defineTable({
+    customerId: v.id("customers"),
+    tableId: v.id("tables"),
+    guests: v.number(),
+    time: v.string(),
+    status: v.union(v.literal("booked"), v.literal("seated"), v.literal("cancelled"), v.literal("completed")),
+  }).index("by_time", ["time"]),
+  deliveries: defineTable({
+    orderId: v.id("orders"),
+    rider: v.string(),
+    address: v.string(),
+    fee: v.number(),
+    status: v.union(v.literal("queued"), v.literal("picked-up"), v.literal("delivered")),
+  }).index("by_status", ["status"]),
+  shifts: defineTable({
+    staffId: v.id("staff"),
+    openedAt: v.string(),
+    closedAt: v.optional(v.string()),
+    openingCash: v.number(),
+    closingCash: v.optional(v.number()),
+  }).index("by_openedAt", ["openedAt"]),
+  audit: defineTable({
+    at: v.string(),
+    actor: v.string(),
+    action: v.string(),
+  }).index("by_at", ["at"]),
+});
