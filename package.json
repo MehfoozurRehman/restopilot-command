@@ -7,11 +7,11 @@
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
+    "dev": "node init && vite --host 127.0.0.1",
     "electron:dev": "cross-env ELECTRON_DEV=true vite --host 127.0.0.1",
     "assets": "node scripts/generate-brand-assets.mjs",
-    "build": "npm run assets && tsc -b && vite build && electron-builder",
-    "build:web": "npm run assets && tsc -b && vite build",
+    "build": "node init && npm run assets && tsc -b && vite build && electron-builder",
+    "build:web": "node init && npm run assets && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
