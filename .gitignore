@@ -13,11 +13,8 @@ dist-ssr
 dist-electron
 release
 *.local
-.env
-.env.local
 
 # Editor directories and files
-.vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -26,3 +23,4 @@ release
 *.njsproj
 *.sln
 *.sw?
+config.bat
