@@ -23,4 +23,6 @@ release
 *.njsproj
 *.sln
 *.sw?
-config.bat
+
+.env*
+!.env.example
